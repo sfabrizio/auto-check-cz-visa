@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <style>
+        .main {
+            display: grid;
+            grid-auto-rows: 100px;
+        }
+
+        .action {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button {
+            height: 42px;
+            width: 90px;
+            border-radius: 5px;
+            padding: 7px;
+            font-size: 20px;
+            color: white;
+            background-color: blueviolet;
+        }
+
+        .result {
+            display: flex;
+            justify-content: center;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="title">
+            <span>
+                VISA status check from <a href="https://frs.gov.cz/en/ioff/application-status">frs.gov.cz</a>
+            </span>
+        </div>
+        <div class="action">
+            <button class="button" onclick="sendCheck()">Check</button>
+        </div>
+        <div class="result"></div>
+    </div>
+
+    <script>
+        var ws = new WebSocket('ws://localhost:40510');
+        ws.onopen = function () {
+            console.log('websocket is connecting...')
+            ws.send('connect')
+        }
+
+        ws.onmessage = function (e) {
+            if (e.data === 'connected') {
+                console.log('connected')
+                return;
+            }
+            var resDiv = document.querySelector('div.result')
+            resDiv.innerText = e.data;
+            // yeah horrible hack, but I didn't find out how to do it from python
+            var preValidJson = '[' + e.data.replace(/}/gi, '},').slice(0, -2) + ']';
+            console.log(JSON.parse(preValidJson));
+        }
+
+        ws.onclose = function (e) {
+
+        }
+
+        var sendCheck = function () {
+            ws.send('check')
+        }
+    </script>
+</body>
+
+</html>

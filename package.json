@@ -1,0 +1,25 @@
+{
+  "name": "cz-minister-visa-auto-check",
+  "version": "1.0.0",
+  "description": "Small web app to automatically check the satus of visa papers in progress",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "forever -w server.js ",
+    "postinstall": "npm i -g forever"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wahengchang/nodejs-websocket-example.git"
+  },
+  "author": "Samuel Fabrizio <samuelfabrizio@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sfabrizio"
+  },
+  "homepage": "https://github.com/sfabrizio",
+  "dependencies": {
+    "express": "^4.16.2",
+    "ws": "^3.2.0"
+  }
+}
