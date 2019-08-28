@@ -14,7 +14,7 @@
 
         .button {
             height: 42px;
-            width: 90px;
+            width: 130px;
             border-radius: 5px;
             padding: 7px;
             font-size: 20px;
@@ -23,9 +23,25 @@
         }
 
         .result {
-            display: flex;
-            justify-content: center;
+            display: grid;
             font-size: 20px;
+        }
+
+        .result__row {
+            display: grid;
+            grid-template-columns: 200px 150px 250px;
+        }
+
+        .status__color {
+            background-color: #8BC34A;
+            height: 20px;
+            width: 90px;
+            border-radius: 5px;
+            padding: 10px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            font-size: 20px;
+            color: white;
         }
     </style>
 </head>
@@ -38,36 +54,76 @@
             </span>
         </div>
         <div class="action">
-            <button class="button" onclick="sendCheck()">Check</button>
+            <button class="button" onclick="sendCheck()">Check Now</button>
         </div>
-        <div class="result"></div>
+        <div class="result" id="result">
+        </div>
     </div>
 
     <script>
-        var ws = new WebSocket('ws://localhost:40510');
-        ws.onopen = function () {
-            console.log('websocket is connecting...')
-            ws.send('connect')
-        }
-
-        ws.onmessage = function (e) {
-            if (e.data === 'connected') {
-                console.log('connected')
-                return;
+        function connect() {
+            var ws = new WebSocket('ws://localhost:40510');
+            ws.onopen = function () {
+                console.log('websocket is connecting...')
+                ws.send('connect')
             }
-            var resDiv = document.querySelector('div.result')
-            resDiv.innerText = e.data;
-            // yeah horrible hack, but I didn't find out how to do it from python
-            var preValidJson = '[' + e.data.replace(/}/gi, '},').slice(0, -2) + ']';
-            console.log(JSON.parse(preValidJson));
+
+            ws.onerror = function (err) {
+                console.error('Socket encountered error: ', err.message, 'Closing socket');
+                ws.close();
+            };
+
+            ws.onclose = function (e) {
+                console.log('Socket is closed. Reconnect will be attempted in 3 second.', e.reason);
+                setTimeout(function () {
+                    console.log('Connecting again');
+                    connection = connect();
+                }, 3000);
+            };
+
+            ws.onmessage = function (e) {
+                if (e.data === 'checking') {
+                    return;
+                }
+                if (e.data === 'connected') {
+                    console.log('connected, send check')
+                    sendCheck();
+                    return;
+                }
+                // yeah horrible hack, but I didn't find out how to do it from python
+                var rawData = '[' + e.data.replace(/}/gi, '},').slice(0, -2) + ']';
+                var jsonData = JSON.parse(rawData);
+                var resultDiv = document.getElementById('result');
+                resultDiv.setAttribute('style', 'display: grid')
+                parseData(jsonData)
+                console.log(JSON.stringify(jsonData, null, 4));
+            }
+
+            return ws;
         }
-
-        ws.onclose = function (e) {
-
+        var parseData = function (data) {
+            var resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '';
+            data.forEach(el => {
+                var node = document.createElement("div");
+                node.classList.add('result__row');
+                node.innerHTML = "<span class='row__desc'>" +
+                    el.desc + "  " +
+                    "</span>" +
+                    "<span class='row__code'>(" +
+                    el.code + "-" + el.number +
+                    ")</span>" +
+                    "<span class='row__status'>" +
+                    "   Status: " + "<span class='status__color'>" + el.status + "</span>" +
+                    "</span>";
+                resultDiv.appendChild(node);
+            });
         }
-
+        var connection = connect();
         var sendCheck = function () {
-            ws.send('check')
+            var resultDiv = document.getElementById('result');
+            resultDiv.setAttribute('style', 'display: none')
+            connection.send('check')
         }
     </script>
 </body>
