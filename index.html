@@ -4,12 +4,18 @@
     <style>
         .main {
             display: grid;
-            grid-auto-rows: 100px;
+            grid-template-rows: 20px 160px 200px;
         }
 
         .action {
             display: flex;
             justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action span {
+            margin-bottom: 10px;
         }
 
         .button {
@@ -29,7 +35,7 @@
 
         .result__row {
             display: grid;
-            grid-template-columns: 200px 150px 250px;
+            grid-template-columns: 200px 150px auto 280px;
         }
 
         .status__color {
@@ -54,6 +60,7 @@
             </span>
         </div>
         <div class="action">
+            <span>(Automatically check every 8 hours)</span>
             <button class="button" onclick="sendCheck()">Check Now</button>
         </div>
         <div class="result" id="result">
@@ -115,6 +122,9 @@
                     ")</span>" +
                     "<span class='row__status'>" +
                     "   Status: " + "<span class='status__color'>" + el.status + "</span>" +
+                    "</span>" +
+                    "<span class='row__code'>" +
+                    "Last check: " + el.datetime +
                     "</span>";
                 resultDiv.appendChild(node);
             });
