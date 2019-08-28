@@ -1,8 +1,8 @@
 {
   "name": "cz-minister-visa-auto-check",
   "version": "1.0.0",
-  "description": "Small web app to automatically check the satus of visa papers in progress",
-  "main": "index.js",
+  "description": "Small web app to automatically check the status of visa papers from czech minister",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "forever -w server.js ",
