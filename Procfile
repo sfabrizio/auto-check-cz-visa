@@ -1,0 +1,1 @@
+web: npm install && forever -w server.js
