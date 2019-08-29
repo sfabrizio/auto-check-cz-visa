@@ -7,6 +7,10 @@
             grid-template-rows: 20px 160px 200px;
         }
 
+        .title div {
+            margin-bottom: 10px;
+        }
+
         .action {
             display: flex;
             justify-content: center;
@@ -35,7 +39,7 @@
 
         .result__row {
             display: grid;
-            grid-template-columns: 200px 150px auto 280px;
+            grid-template-columns: 200px 150px auto;
         }
 
         .status__color {
@@ -55,13 +59,14 @@
 <body>
     <div class="main">
         <div class="title">
-            <span>
-                VISA status check from <a href="https://frs.gov.cz/en/ioff/application-status">frs.gov.cz</a>
-            </span>
+            <div>
+                VISA status check from <a href="https://frs.gov.cz/en/ioff/application-status" target="_blank">frs.gov.cz</a>
+            </div>
+            <div>Last check: <span id="last-check"></span></div>
         </div>
         <div class="action">
             <span>(Automatically check every 8 hours)</span>
-            <button class="button" onclick="sendCheck();notifyMe()">Check Now</button>
+            <button class="button" onclick="sendCheck()">Check Now</button>
         </div>
         <div class="result" id="result">
         </div>
@@ -112,16 +117,23 @@
             return ws;
         }
 
-        var isStatusChanged = function(jsonData) {
-            var res = jsonData.filter( function(el) {
+        var isStatusChanged = function (jsonData) {
+            var res = jsonData.filter(function (el) {
                 return el.status !== "In Process";
             });
             return res.length;
         }
         var parseData = function (data) {
+            if (!data || !data.length) {
+                return;
+            }
             var resultDiv = document.getElementById('result');
+            var lastCheckSpan = document.getElementById('last-check');
+
+            lastCheckSpan.innerHTML = data[0].datetime || 'N/A';
             resultDiv.innerHTML = '';
-            data.forEach(el => {
+
+            data.forEach(function (el) {
                 var node = document.createElement("div");
                 node.classList.add('result__row');
                 node.innerHTML = "<span class='row__desc'>" +
@@ -132,15 +144,14 @@
                     ")</span>" +
                     "<span class='row__status'>" +
                     "   Status: " + "<span class='status__color'>" + el.status + "</span>" +
-                    "</span>" +
-                    "<span class='row__code'>" +
-                    "Last check: " + el.datetime +
                     "</span>";
                 resultDiv.appendChild(node);
             });
         }
         var connection = connect();
         var sendCheck = function () {
+            var lastCheckSpan = document.getElementById('last-check');
+            lastCheckSpan.innerHTML = 'checking...';
             var resultDiv = document.getElementById('result');
             resultDiv.setAttribute('style', 'display: none')
             connection.send('check')
