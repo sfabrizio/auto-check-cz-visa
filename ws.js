@@ -1,9 +1,8 @@
 const spawn = require("child_process").spawn;
 
-const WebSocketServer = require('ws').Server,
-  wss = new WebSocketServer({
-    port: 40510
-  })
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 40510 });
 
 const requestData = (ws) => {
   const process = spawn('python', ["./check.py", ]);
@@ -14,8 +13,11 @@ const requestData = (ws) => {
   })
 }
 
-wss.on('connection', function (ws) {
-  ws.on('message', (msg) => {
+wss.on('connection', function connection(ws) {
+  ws.on('error', (err) => {
+    console.log('ws error', err);
+  });
+  ws.on('message', msg => {
     console.log('received: %s', msg)
     if (msg === 'connect') {
       ws.send('connected')
