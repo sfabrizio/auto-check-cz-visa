@@ -24,7 +24,7 @@ wss.on('connection', function connection(ws) {
       setInterval(() => {
         console.log('checking now..')
         requestData(ws);
-      }, 2.88e+7) //every 8 hours
+      }, 3.6e+6) //every 1 hours
     } else if (msg === 'check') {
       ws.send('checking');
       requestData(ws)
