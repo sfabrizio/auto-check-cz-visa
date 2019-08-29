@@ -8,6 +8,9 @@
     "start": "forever -w server.js ",
     "postinstall": "npm i -g forever && pip install -r requirements.txt"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sfabrizio/auto-check-cz-visa.git"
