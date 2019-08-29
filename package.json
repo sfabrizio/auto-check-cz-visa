@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "forever -w server.js ",
-    "postinstall": "npm i -g forever && pip install -r requirements.txt"
+    "postinstall": "npm i -g forever && pip install -r req.txt"
   },
   "engines": {
     "node": "12.x"
