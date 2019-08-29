@@ -1,6 +1,6 @@
 # auto-check-cz-visa
 
-This app comes ups while I'm waiting for my VISA applications in Czech Republic. The status on this process can be check by the Czech Minister page. But I decided to do it automatically every 4hours and check my 3 application in one row. This app will send a desktop notifications if there is a change in the status.
+This app comes ups while I'm waiting for my VISA applications in Czech Republic. The status of visas processes can be check by the Czech Minister page. But I decided to do it automatically every hour and check my 3 applications in one row. This app will send a desktop notifications if there is a change in the status. 
 
 ## Configure 
 
