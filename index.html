@@ -61,7 +61,7 @@
         </div>
         <div class="action">
             <span>(Automatically check every 8 hours)</span>
-            <button class="button" onclick="sendCheck()">Check Now</button>
+            <button class="button" onclick="sendCheck();notifyMe()">Check Now</button>
         </div>
         <div class="result" id="result">
         </div>
@@ -102,11 +102,21 @@
                 var jsonData = JSON.parse(rawData);
                 var resultDiv = document.getElementById('result');
                 resultDiv.setAttribute('style', 'display: grid')
+                if (isStatusChanged(jsonData)) {
+                    notifyMe('Status Change!')
+                };
                 parseData(jsonData)
                 console.log(JSON.stringify(jsonData, null, 4));
             }
 
             return ws;
+        }
+
+        var isStatusChanged = function(jsonData) {
+            var res = jsonData.filter( function(el) {
+                return el.status !== "In Process";
+            });
+            return res.length;
         }
         var parseData = function (data) {
             var resultDiv = document.getElementById('result');
@@ -134,6 +144,29 @@
             var resultDiv = document.getElementById('result');
             resultDiv.setAttribute('style', 'display: none')
             connection.send('check')
+        }
+
+        function notifyMe(msg) {
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted" && msg) {
+                // If it's okay let's create a notification
+                var notification = new Notification(msg);
+            }
+
+            // Otherwise, we need to ask the user for permission
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted" && msg) {
+                        var notification = new Notification(msg);
+                    }
+                });
+            }
         }
     </script>
 </body>
