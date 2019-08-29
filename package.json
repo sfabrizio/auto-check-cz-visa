@@ -1,5 +1,5 @@
 {
-  "name": "cz-minister-visa-auto-check",
+  "name": "auto-check-cz-visa",
   "version": "1.0.0",
   "description": "Small web app to automatically check the status of visa papers from czech minister",
   "main": "server.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wahengchang/nodejs-websocket-example.git"
+    "url": "git+https://github.com/sfabrizio/auto-check-cz-visa.git"
   },
   "author": "Samuel Fabrizio <samuelfabrizio@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sfabrizio"
+    "url": "https://github.com/sfabrizio/auto-check-cz-visa"
   },
-  "homepage": "https://github.com/sfabrizio",
+  "homepage": "https://github.com/sfabrizio/auto-check-cz-visa",
   "dependencies": {
     "express": "^4.16.2",
     "ws": "^3.2.0"
